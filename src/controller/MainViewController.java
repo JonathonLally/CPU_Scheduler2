@@ -98,7 +98,7 @@ public class MainViewController {
 
             secondaryStage.setScene(new Scene(root, 400, 400));                    //Sizes new window
             secondaryStage.showAndWait();                                          //Show new window, and waits for it to close
-            addFixedDataToView(burstTimes, 10);         //TODO ASSUMING 10 for now
+            addFixedDataToView(burstTimes, 10);         //Assume 10, shrinks numOfProcesses later
 
         } catch (Exception e) {
             e.printStackTrace();
