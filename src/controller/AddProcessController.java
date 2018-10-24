@@ -68,7 +68,6 @@ public class AddProcessController {
 
     @FXML
     private void confirmBtnPressed(ActionEvent event) {
-        System.out.println("Sending " + (numProcesses + 1));
 
         for(int i = 0; i < numProcesses + 1; i++) {
             try {

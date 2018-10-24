@@ -7,8 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import model.AProcess;
+import model.FCFSSim;
 
 import java.util.Arrays;
 
@@ -37,7 +37,8 @@ public class MainViewController {
     void startSim(ActionEvent event) {      //This starts a simulation, activated by calculate button
 
         if (getAlgorithm() == "First Come First Serve") {
-            System.out.println("Starting FCFS");
+            setOutputArea("Starting FCFS");
+            startFCFS(getValueType());
         } else if (getAlgorithm() == "Shortest Job First") {
             System.out.println("Starting SJF");
         } else if (getAlgorithm() == "Shortest Remaining First") {
@@ -61,14 +62,19 @@ public class MainViewController {
     void checkFixed(ActionEvent event) {
         if (getValueType() == "Fixed") {
             launchAddProcess();
+        } else if (getValueType() == "Random") {
+            clearViews();
+            addProcesses();
         }
 
     }
 
     public void populateComboBoxes() {  //Populates ComboBoxes
         valueTypeBox.getItems().addAll("Random", "Fixed");
+        valueTypeBox.getSelectionModel().select(0);
         algorithmBox.getItems().addAll("First Come First Serve", "Shortest Job First", "Shortest Remaining First",
                 "Round Robin", "Priority Scheduling");
+        algorithmBox.getSelectionModel().select(0);
     }
 
     public String getAlgorithm() {          //Gets value of Algorithm ChoiceBox
@@ -101,9 +107,6 @@ public class MainViewController {
     }
 
 
-
-
-
     public int getNumOfProcesses() {        //Gets number of processes from numofprocesses textfield RANDOM entry
         return Integer.parseInt(numOfProcessField.getText());
     }
@@ -125,6 +128,8 @@ public class MainViewController {
         arrivalView.getItems().clear();
         waitView.getItems().clear();
         taView.getItems().clear();
+        waitAverage.clear();
+        taAverage.clear();
     }
 
     private void addProcessToView(AProcess[] pArray) {
@@ -160,6 +165,15 @@ public class MainViewController {
         getNumOfFixedProcesses();
     }
 
+    public void addProcesses() {        //Adds pIDs to view if random is selected, just pIds no value until sim
+        clearViews();
+        numOfProcesses = getNumOfProcesses();
+
+        for(int i = 0; i < numOfProcesses; i++) {
+            processIDView.getItems().addAll(i);
+        }
+    }
+
     public void setOutputArea(String in) {
         try {
             outputArea.clear();
@@ -167,6 +181,20 @@ public class MainViewController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void startFCFS(String type) {
+        FCFSSim fcfs;
+
+        if(type == "Random") {
+            fcfs = new FCFSSim(getNumOfProcesses());
+            addProcessToView(fcfs.getpArray());
+        } else if (type == "Fixed") {
+            fcfs = new FCFSSim(numOfProcesses, burstTimes);
+            addProcessToView(fcfs.getpArray());
+        } else { fcfs = null; }
+        waitAverage.setText(Double.toString(fcfs.getAverageWait()));
+        taAverage.setText(Double.toString(fcfs.getAverageTA()));
     }
 
 }

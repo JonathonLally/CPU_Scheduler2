@@ -1,11 +1,15 @@
 package model;
 
 public abstract class Sim {     //Framework for other Simulations
-    private AProcess[] pArray;
-    private int numOfProcesses;
-    private int counter;
-    private double averageWait;
-    private double averageTA;
+    protected AProcess[] pArray;
+    protected int[] fixedBurstValues;
+    protected int numOfProcesses;
+    protected int counter;
+    protected double averageWait;
+    protected double averageTA;
+    protected int totalWait;
+    protected int totalTATime;
+
 
     public void printpArray() {     //Prints values of pArray + Averages
         for (AProcess aPArray : pArray) {
@@ -15,11 +19,13 @@ public abstract class Sim {     //Framework for other Simulations
         System.out.println("Average TA Time : " + averageTA);
     }
 
-    public void calculateAverageWait() {        //TODO
+    public void calculateAverageWait() {
+        averageWait = totalWait / numOfProcesses;
 
     }
 
-    public void calculateAverageTA() {      //TODO
+    public void calculateAverageTA() {
+        averageTA = totalTATime / numOfProcesses;
 
     }
 
@@ -61,5 +67,29 @@ public abstract class Sim {     //Framework for other Simulations
 
     public void setAverageTA(double averageTA) {
         this.averageTA = averageTA;
+    }
+
+    public int getTotalWait() {
+        return totalWait;
+    }
+
+    public void setTotalWait(int totalWait) {
+        this.totalWait = totalWait;
+    }
+
+    public int[] getFixedBurstValues() {
+        return fixedBurstValues;
+    }
+
+    public void setFixedBurstValues(int[] fixedBurstValues) {
+        this.fixedBurstValues = fixedBurstValues;
+    }
+
+    public int getTotalTATime() {
+        return totalTATime;
+    }
+
+    public void setTotalTATime(int totalTATime) {
+        this.totalTATime = totalTATime;
     }
 }
