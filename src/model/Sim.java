@@ -19,13 +19,16 @@ public abstract class Sim {     //Framework for other Simulations
         System.out.println("Average TA Time : " + averageTA);
     }
 
-    public void calculateAverageWait() {
-        averageWait = totalWait / numOfProcesses;
+    public void calculateAverageWait() {            //TODO Fix these, giving whole numbers
+
+        averageWait = (double)totalWait / (double)numOfProcesses;
+        averageWait = Math.round(averageWait * 100.0)/100.0;        //Rounds to .00
 
     }
 
     public void calculateAverageTA() {
-        averageTA = totalTATime / numOfProcesses;
+        averageTA = (double)totalTATime / (double)numOfProcesses;
+        averageTA = Math.round(averageTA * 100.0)/100.0;
 
     }
 

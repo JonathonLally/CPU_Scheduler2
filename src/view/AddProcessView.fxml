@@ -7,33 +7,33 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddProcessController">
    <children>
-      <Label layoutX="161.0" layoutY="27.0" text="Number of Processes" />
-      <TextField fx:id="p0BurstField" layoutX="49.0" layoutY="99.0" promptText="P0" />
-      <Label layoutX="95.0" layoutY="82.0" text="Burst Time" />
-      <Label layoutX="292.0" layoutY="82.0" text="Priority" />
-      <TextField fx:id="p1BurstField" layoutX="49.0" layoutY="124.0" promptText="P1" />
-      <TextField fx:id="p2BurstField" layoutX="49.0" layoutY="149.0" promptText="P2" />
-      <TextField fx:id="p3BurstField" layoutX="49.0" layoutY="174.0" promptText="P3" />
-      <TextField fx:id="p4BurstField" layoutX="49.0" layoutY="199.0" promptText="P4" />
-      <TextField fx:id="p5BurstField" layoutX="49.0" layoutY="224.0" promptText="P5" />
-      <TextField fx:id="p6BurstField" layoutX="49.0" layoutY="249.0" promptText="P6" />
-      <TextField fx:id="p7BurstField" layoutX="49.0" layoutY="274.0" promptText="P7" />
-      <TextField fx:id="p8BurstField" layoutX="49.0" layoutY="299.0" promptText="P8" />
-      <TextField fx:id="p0PriorityField" layoutX="237.0" layoutY="99.0" promptText="P0" />
-      <TextField fx:id="p1PriorityField" layoutX="237.0" layoutY="124.0" promptText="P1" />
-      <TextField fx:id="p2PriorityField" layoutX="237.0" layoutY="149.0" promptText="P2" />
-      <TextField fx:id="p3PriorityField" layoutX="237.0" layoutY="174.0" promptText="P3" />
-      <TextField fx:id="p4PriorityField" layoutX="237.0" layoutY="199.0" promptText="P4" />
-      <TextField fx:id="p5PriorityField" layoutX="237.0" layoutY="224.0" promptText="P5" />
-      <TextField fx:id="p6PriorityField" layoutX="237.0" layoutY="249.0" promptText="P6" />
-      <TextField fx:id="p7PriorityField" layoutX="237.0" layoutY="274.0" promptText="P7" />
-      <TextField fx:id="p8PriorityField" layoutX="237.0" layoutY="299.0" promptText="P8" />
-      <TextField fx:id="p9BurstField" layoutX="49.0" layoutY="324.0" promptText="P9" />
-      <TextField fx:id="p9PriorityField" layoutX="237.0" layoutY="324.0" promptText="P9" />
-      <Button fx:id="cancelBtn" layoutX="128.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancelBtnPressed" prefHeight="25.0" prefWidth="67.0" text="Cancel" />
-      <Button fx:id="confirmBtn" layoutX="228.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmBtnPressed" prefHeight="25.0" prefWidth="67.0" text="Confirm" />
-      <TextField fx:id="numProcessField" alignment="CENTER" editable="false" focusTraversable="false" layoutX="189.0" layoutY="44.0" mouseTransparent="true" prefHeight="25.0" prefWidth="57.0" text="1" />
-      <Button fx:id="minusBtn" layoutX="161.0" layoutY="44.0" mnemonicParsing="false" onAction="#minusBtnPressed" prefHeight="25.0" prefWidth="25.0" text="–" />
-      <Button fx:id="plusBtn" ellipsisString="+" layoutX="249.0" layoutY="44.0" mnemonicParsing="false" onAction="#plusBtnPressed" prefHeight="25.0" prefWidth="22.0" text="+" />
+      <Label layoutX="144.0" layoutY="27.0" text="Number of Processes" />
+      <TextField fx:id="p0BurstField" layoutX="32.0" layoutY="99.0" promptText="P0" />
+      <Label layoutX="78.0" layoutY="82.0" text="Burst Time" />
+      <Label layoutX="275.0" layoutY="82.0" text="Priority" />
+      <TextField fx:id="p1BurstField" layoutX="32.0" layoutY="124.0" promptText="P1" />
+      <TextField fx:id="p2BurstField" layoutX="32.0" layoutY="149.0" promptText="P2" />
+      <TextField fx:id="p3BurstField" layoutX="32.0" layoutY="174.0" promptText="P3" />
+      <TextField fx:id="p4BurstField" layoutX="32.0" layoutY="199.0" promptText="P4" />
+      <TextField fx:id="p5BurstField" layoutX="32.0" layoutY="224.0" promptText="P5" />
+      <TextField fx:id="p6BurstField" layoutX="32.0" layoutY="249.0" promptText="P6" />
+      <TextField fx:id="p7BurstField" layoutX="32.0" layoutY="274.0" promptText="P7" />
+      <TextField fx:id="p8BurstField" layoutX="32.0" layoutY="299.0" promptText="P8" />
+      <TextField fx:id="p0PriorityField" layoutX="220.0" layoutY="99.0" promptText="P0" />
+      <TextField fx:id="p1PriorityField" layoutX="220.0" layoutY="124.0" promptText="P1" />
+      <TextField fx:id="p2PriorityField" layoutX="220.0" layoutY="149.0" promptText="P2" />
+      <TextField fx:id="p3PriorityField" layoutX="220.0" layoutY="174.0" promptText="P3" />
+      <TextField fx:id="p4PriorityField" layoutX="220.0" layoutY="199.0" promptText="P4" />
+      <TextField fx:id="p5PriorityField" layoutX="220.0" layoutY="224.0" promptText="P5" />
+      <TextField fx:id="p6PriorityField" layoutX="220.0" layoutY="249.0" promptText="P6" />
+      <TextField fx:id="p7PriorityField" layoutX="220.0" layoutY="274.0" promptText="P7" />
+      <TextField fx:id="p8PriorityField" layoutX="220.0" layoutY="299.0" promptText="P8" />
+      <TextField fx:id="p9BurstField" layoutX="32.0" layoutY="324.0" promptText="P9" />
+      <TextField fx:id="p9PriorityField" layoutX="220.0" layoutY="324.0" promptText="P9" />
+      <Button fx:id="cancelBtn" layoutX="111.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancelBtnPressed" prefHeight="25.0" prefWidth="67.0" text="Cancel" />
+      <Button fx:id="confirmBtn" layoutX="211.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmBtnPressed" prefHeight="25.0" prefWidth="67.0" text="Confirm" />
+      <TextField fx:id="numProcessField" alignment="CENTER" editable="false" focusTraversable="false" layoutX="172.0" layoutY="44.0" mouseTransparent="true" prefHeight="25.0" prefWidth="57.0" text="1" />
+      <Button fx:id="minusBtn" layoutX="144.0" layoutY="44.0" mnemonicParsing="false" onAction="#minusBtnPressed" prefHeight="25.0" prefWidth="25.0" text="–" />
+      <Button fx:id="plusBtn" ellipsisString="+" layoutX="232.0" layoutY="44.0" mnemonicParsing="false" onAction="#plusBtnPressed" prefHeight="25.0" prefWidth="22.0" text="+" />
    </children>
 </AnchorPane>
