@@ -202,7 +202,9 @@ public class MainViewController {
         taAverage.setText(Double.toString(fcfs.getAverageTA()));
     }
 
+
     public void startSJF(String type) {             //Starts a Shortest Job First Sim
+
         SJFSim sjf;
 
         if(type == "Random") {
@@ -211,10 +213,11 @@ public class MainViewController {
         } else if (type == "Fixed") {
             sjf = new SJFSim(numOfProcesses, burstTimes);
             addProcessToView(sjf.getpArray());
-        } else {sjf = null;}
+        } else { sjf = null; }      
         waitAverage.setText(Double.toString(sjf.getAverageWait()));
         taAverage.setText(Double.toString(sjf.getAverageTA()));
     }
+
 
     public void startPS(String type) {          //Starts a Priority Scheduling Simulation
         PSSim ps;

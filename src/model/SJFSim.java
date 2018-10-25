@@ -51,9 +51,33 @@ public class SJFSim extends Sim {            //Shortest Job First Simulation
         for (int i = 0; i<sjfArray.length; i++) {
             pArray[i].setWaitTime(counter);
             pArray[i].setTurnAroundTime(counter + pArray[i].getBurstTime());
-            counter += pArray[i].getBurstTime();
-        }
+        calculateAverageTA();
+        calculateAverageWait();
+
     }
+
+    public SJFSim(int amount, int[] values) {      //Overloaded Constructor for Fixed Values SJF Simulation
+        pArray = new SJFProcess[amount];
+        numOfProcesses = amount;
+        counter = 0;
+        totalWait = 0;
+        totalTATime = 0;
+        fixedBurstValues = values;
+        fillFixedpArray();
+        sortArray(pArray);
+        calculateAverageWait();
+        calculateAverageTA();
+
+    }
+
+    public AProcess[] sortArray(AProcess[] sjfArray) {          //Sorts Array by comparing burst times
+        //Converted the comparator into a lambda expression
+        Arrays.sort(sjfArray, (sjfProcess, t1) -> sjfProcess.getBurstTime() > t1.getBurstTime() ? 1 : -1);
+        System.out.println("Sorting SJF");
+        return sjfArray;
+    }
+
+
 
     public void calculateTotals() {                             //Calculates Total Wait and Turn Around Time for Sim
         for (AProcess aPArray : pArray) {
