@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.AProcess;
 import model.FCFSSim;
+import model.SJFSim;
 
 import java.util.Arrays;
 
@@ -41,6 +42,7 @@ public class MainViewController {
             startFCFS(getValueType());
         } else if (getAlgorithm() == "Shortest Job First") {
             System.out.println("Starting SJF");
+            startSJF(getValueType());
         } else if (getAlgorithm() == "Shortest Remaining First") {
             System.out.println("Starting SRF");
         } else if (getAlgorithm() == "Round Robin") {
@@ -195,6 +197,20 @@ public class MainViewController {
         } else { fcfs = null; }
         waitAverage.setText(Double.toString(fcfs.getAverageWait()));
         taAverage.setText(Double.toString(fcfs.getAverageTA()));
+    }
+
+    public void startSJF(String type) {
+        SJFSim sjf;
+
+        if(type == "Random") {
+            sjf = new SJFSim(getNumOfProcesses());
+            addProcessToView(sjf.getpArray());
+        } else if (type == "Fixed") {
+            sjf = new SJFSim(numOfProcesses, burstTimes);
+            addProcessToView(sjf.getpArray());
+        } else { sjf = null; }
+        waitAverage.setText(Double.toString(sjf.getAverageWait()));
+        taAverage.setText(Double.toString(sjf.getAverageTA()));
     }
 
 }
