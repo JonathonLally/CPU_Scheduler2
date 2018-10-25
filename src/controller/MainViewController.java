@@ -7,10 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.AProcess;
-import model.FCFSSim;
-import model.PSSim;
-import model.SJFSim;
+import model.*;
 
 import java.util.Arrays;
 
@@ -39,17 +36,17 @@ public class MainViewController {
     void startSim(ActionEvent event) {           //This starts a simulation, activated by calculate button
 
         if (getAlgorithm() == "First Come First Serve") {
-            setOutputArea("Starting FCFS");
+            setOutputArea("Starting First Come First Serve Simulation");
             startFCFS(getValueType());
         } else if (getAlgorithm() == "Shortest Job First") {
-            setOutputArea("Starting SJF");
+            setOutputArea("Starting Shortest Job First Simulation");
             startSJF(getValueType());
         } else if (getAlgorithm() == "Shortest Remaining First") {
             System.out.println("Starting SRF");
         } else if (getAlgorithm() == "Round Robin") {
             System.out.println("Starting RR");
         } else if (getAlgorithm() == "Priority Scheduling") {
-            setOutputArea("Starting Priority Scheduling");
+            setOutputArea("Starting Priority Scheduling Simulation");
             startPS(getValueType());
         } else System.out.println("Invalid");
 
@@ -152,6 +149,19 @@ public class MainViewController {
             taView.getItems().add(burstTime + waitTime);
             waitView.getItems().add(waitTime);
             waitTime += burstTime;
+
+        }
+    }
+
+    private void addPSProcessToView(PSProcess[] psArray) {
+        clearViews();
+
+        for(int i = 0; i < psArray.length; i++) {
+            processIDView.getItems().add(psArray[i].getpId());
+            burstView.getItems().add(psArray[i].getBurstTime());
+            taView.getItems().add(psArray[i].getTurnAroundTime());
+            waitView.getItems().add(psArray[i].getWaitTime());
+            priorityView.getItems().add(psArray[i].getPriority());
         }
     }
 
@@ -224,7 +234,8 @@ public class MainViewController {
 
         if(type == "Random") {
             ps = new PSSim(getNumOfProcesses());
-            addProcessToView(ps.getPSArray());
+            //addProcessToView(ps.getPSArray());
+            addPSProcessToView(ps.getPSArray());
 
         } else if (type =="Fixed") {                //TODO Fixed Data PS
             ps = null;

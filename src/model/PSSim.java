@@ -34,8 +34,11 @@ public class PSSim extends Sim {            //Priority Scheduling Simulation
             pArray[i].setWaitTime(counter);
             totalWait += counter;
             pArray[i].setTurnAroundTime(counter + pArray[i].getBurstTime());
+            totalTATime += pArray[i].getTurnAroundTime();
             counter += pArray[i].getBurstTime();
         }
+        calculateAverageWait();
+        calculateAverageTA();
     }
 
     public PSProcess[] getPSArray() {       //Returns PSProcess[] instead of AProcess[]
