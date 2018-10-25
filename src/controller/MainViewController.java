@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.AProcess;
 import model.FCFSSim;
+import model.PSSim;
+import model.SJFSim;
 
 import java.util.Arrays;
 
@@ -34,24 +36,26 @@ public class MainViewController {
 
     //FXML Methods
     @FXML
-    void startSim(ActionEvent event) {      //This starts a simulation, activated by calculate button
+    void startSim(ActionEvent event) {           //This starts a simulation, activated by calculate button
 
         if (getAlgorithm() == "First Come First Serve") {
             setOutputArea("Starting FCFS");
             startFCFS(getValueType());
         } else if (getAlgorithm() == "Shortest Job First") {
-            System.out.println("Starting SJF");
+            setOutputArea("Starting SJF");
+            startSJF(getValueType());
         } else if (getAlgorithm() == "Shortest Remaining First") {
             System.out.println("Starting SRF");
         } else if (getAlgorithm() == "Round Robin") {
             System.out.println("Starting RR");
         } else if (getAlgorithm() == "Priority Scheduling") {
-            System.out.println("Starting PS");
+            setOutputArea("Starting Priority Scheduling");
+            startPS(getValueType());
         } else System.out.println("Invalid");
 
     }
     @FXML
-    void initialize() {     //Initializes MainView
+    void initialize() {                             //Initializes MainView
         System.out.println("Initializing MainView");
         burstTimes = new int[10];
         populateComboBoxes();
@@ -59,7 +63,7 @@ public class MainViewController {
     }
 
     @FXML
-    void checkFixed(ActionEvent event) {
+    void checkFixed(ActionEvent event) {            //This method activates if "Fixed" is chosen from Data Type ComboBox
         if (getValueType() == "Fixed") {
             launchAddProcess();
         } else if (getValueType() == "Random") {
@@ -69,7 +73,7 @@ public class MainViewController {
 
     }
 
-    public void populateComboBoxes() {  //Populates ComboBoxes
+    public void populateComboBoxes() {      //Populates ComboBoxes
         valueTypeBox.getItems().addAll("Random", "Fixed");
         valueTypeBox.getSelectionModel().select(0);
         algorithmBox.getItems().addAll("First Come First Serve", "Shortest Job First", "Shortest Remaining First",
@@ -81,7 +85,8 @@ public class MainViewController {
         String value = algorithmBox.getValue();
         return value;
     }
-    public String getValueType() {
+
+    public String getValueType() {          //Gets value of Values ChoiceBox
         return valueTypeBox.getValue();
     }
 
@@ -121,7 +126,7 @@ public class MainViewController {
         numOfProcessField.setText(Integer.toString(numOfProcesses));
     }
 
-    public void clearViews() {      //Clears ListViews
+    public void clearViews() {      //Clears ListViews and Average fields
         processIDView.getItems().clear();
         priorityView.getItems().clear();
         burstView.getItems().clear();
@@ -132,7 +137,7 @@ public class MainViewController {
         taAverage.clear();
     }
 
-    private void addProcessToView(AProcess[] pArray) {
+    private void addProcessToView(AProcess[] pArray) {      //Writes processSim to GUI
         clearViews();
 
         int waitTime = 0;
@@ -150,7 +155,7 @@ public class MainViewController {
         }
     }
 
-    public void addFixedDataToView(int[] burstTimes, int numProcesses) {
+    public void addFixedDataToView(int[] burstTimes, int numProcesses) {        //Writes fixed data to GUI
         clearViews();
 
         numOfProcessField.setText(Integer.toString(numProcesses));
@@ -174,7 +179,7 @@ public class MainViewController {
         }
     }
 
-    public void setOutputArea(String in) {
+    public void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
         try {
             outputArea.clear();
             outputArea.setText(in);
@@ -183,7 +188,7 @@ public class MainViewController {
         }
     }
 
-    public void startFCFS(String type) {
+    public void startFCFS(String type) {                //Starts a first come first serve Sim
         FCFSSim fcfs;
 
         if(type == "Random") {
@@ -195,6 +200,34 @@ public class MainViewController {
         } else { fcfs = null; }
         waitAverage.setText(Double.toString(fcfs.getAverageWait()));
         taAverage.setText(Double.toString(fcfs.getAverageTA()));
+    }
+
+    public void startSJF(String type) {             //Starts a Shortest Job First Sim
+        SJFSim sjf;
+
+        if(type == "Random") {
+            sjf = new SJFSim(getNumOfProcesses());
+            addProcessToView(sjf.getpArray());
+        } else if (type == "Fixed") {
+            sjf = new SJFSim(numOfProcesses, burstTimes);
+            addProcessToView(sjf.getpArray());
+        } else {sjf = null;}
+        waitAverage.setText(Double.toString(sjf.getAverageWait()));
+        taAverage.setText(Double.toString(sjf.getAverageTA()));
+    }
+
+    public void startPS(String type) {          //Starts a Priority Scheduling Simulation
+        PSSim ps;
+
+        if(type == "Random") {
+            ps = new PSSim(getNumOfProcesses());
+            addProcessToView(ps.getPSArray());
+
+        } else if (type =="Fixed") {                //TODO Fixed Data PS
+            ps = null;
+        } else { ps = null;}
+        waitAverage.setText(Double.toString(ps.getAverageWait()));
+        taAverage.setText(Double.toString(ps.getAverageTA()));
     }
 
 }

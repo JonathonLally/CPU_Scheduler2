@@ -9,4 +9,12 @@ public class PSProcess extends AProcess {       //Process used by Priority Sched
         this.burstTime = burst;
         this.priority = priority;
     }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
 }
