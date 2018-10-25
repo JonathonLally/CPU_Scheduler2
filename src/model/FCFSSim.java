@@ -2,7 +2,7 @@ package model;
 
 import java.util.Random;
 
-public class FCFSSim extends Sim {      //First Come First Serve
+public class FCFSSim extends Sim {      //First Come First Serve Simulation
 
     public FCFSSim(int amount) {        //Constructor for First Come First Serve Simulation
         pArray = new FCFSProcess[amount];
