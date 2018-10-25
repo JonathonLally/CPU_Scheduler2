@@ -17,7 +17,7 @@ Creates GUI, Controlled via cpu.controller.MainViewController
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
@@ -32,7 +32,7 @@ Creates GUI, Controlled via cpu.controller.MainViewController
       <Text layoutX="327.0" layoutY="550.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average" />
       <TextField fx:id="waitAverage" editable="false" layoutX="400.0" layoutY="535.0" prefHeight="25.0" prefWidth="75.0" />
       <TextField fx:id="taAverage" editable="false" layoutX="500.0" layoutY="533.0" prefHeight="25.0" prefWidth="75.0" />
-      <VBox layoutX="25.0" layoutY="41.0" prefHeight="87.0" prefWidth="481.0" spacing="10.0">
+      <VBox layoutX="31.0" layoutY="68.0" prefHeight="87.0" prefWidth="481.0" spacing="10.0">
          <children>
             <HBox prefHeight="43.0" prefWidth="481.0" spacing="50.0">
                <children>
