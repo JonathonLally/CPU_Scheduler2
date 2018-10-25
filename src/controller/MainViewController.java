@@ -90,7 +90,7 @@ public class MainViewController {
     public void launchAddProcess() {    //Launches Add Process Window for Fixed Values
         try {
             Stage secondaryStage = new Stage();                                                             //Stage for new window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/AddProcessView.fxml"));  //loader contains location
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddProcessView.fxml"));  //loader contains location
             Parent root = loader.load();                                                                    //root for new Scene
             AddProcessController launchCtrl = (AddProcessController)loader.getController();     //launchCtrl is controller object for add process
 
@@ -153,7 +153,7 @@ public class MainViewController {
         }
     }
 
-    private void addPSProcessToView(PSProcess[] psArray) {
+    private void addPSProcessToView(PSProcess[] psArray) {      //Writes Priority Scheduling to GUI
         clearViews();
 
         for(int i = 0; i < psArray.length; i++) {
@@ -234,7 +234,6 @@ public class MainViewController {
 
         if(type == "Random") {
             ps = new PSSim(getNumOfProcesses());
-            //addProcessToView(ps.getPSArray());
             addPSProcessToView(ps.getPSArray());
 
         } else if (type =="Fixed") {                //TODO Fixed Data PS

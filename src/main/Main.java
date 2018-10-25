@@ -11,7 +11,7 @@ public class Main extends Application {         //Starts Application
 
     @Override
     public void start(Stage primaryStage) throws Exception{         //Loads GUI, starting with MainView.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/MainView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
         Parent root = loader.load();
         MainViewController mainCtrl = loader.getController();
         primaryStage.setTitle("CPU Scheduler");
