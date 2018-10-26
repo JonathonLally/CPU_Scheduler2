@@ -16,11 +16,26 @@ public class PSSim extends Sim {            //Priority Scheduling Simulation
 
     }
 
+    public PSSim(int amount, int[] burstTimes, int[] priorities) {
+        pArray = new PSProcess[amount];
+        numOfProcesses = amount;
+        fillpArrayFixed(burstTimes, priorities);
+        sortpArray(pArray);
+        calculateWaitsAndTA();
+    }
+
     public void fillpArray() {              //Fills pArray with Random Data
         Random r = new Random();
         for(int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new PSProcess(i, r.nextInt(10 ) + 1, r.nextInt(10) + 1);
         }
+    }
+
+    private void fillpArrayFixed(int[] burstTimes, int[] priorities) {
+
+        for(int i = 0; i < numOfProcesses; i++)
+            pArray[i] = new PSProcess(i, burstTimes[i], priorities[i]);
+
     }
 
     public PSProcess[] sortpArray(PSProcess[] psArray) {        //Sorts PSProcess Array by Priority

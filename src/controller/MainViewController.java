@@ -28,7 +28,7 @@ public class MainViewController {
     @FXML    private ListView taView;
     @FXML    private TextArea outputArea;
 
-    private int[] burstTimes;
+    private int[] burstTimes, priorities;
     private int numOfProcesses;
 
     //FXML Methods
@@ -55,6 +55,7 @@ public class MainViewController {
     void initialize() {                             //Initializes MainView
         System.out.println("Initializing MainView");
         burstTimes = new int[10];
+        priorities = new int[10];
         populateComboBoxes();
         setOutputArea("Welcome to Process Project");
     }
@@ -95,12 +96,14 @@ public class MainViewController {
             AddProcessController launchCtrl = (AddProcessController)loader.getController();     //launchCtrl is controller object for add process
 
             Arrays.fill(burstTimes, 0);                   //Clears array from any old values
+            Arrays.fill(priorities, 0);
             launchCtrl.setBurstArray(burstTimes);           //Injecting Dependency
+            launchCtrl.setPriorityArray(priorities);
 
 
             secondaryStage.setScene(new Scene(root, 400, 400));                    //Sizes new window
             secondaryStage.showAndWait();                                          //Show new window, and waits for it to close
-            addFixedDataToView(burstTimes, 10);         //Assume 10, shrinks numOfProcesses later
+            addFixedDataToView(burstTimes, priorities, 10);         //Assume 10, shrinks numOfProcesses later
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +168,7 @@ public class MainViewController {
         }
     }
 
-    public void addFixedDataToView(int[] burstTimes, int numProcesses) {        //Writes fixed data to GUI
+    public void addFixedDataToView(int[] burstTimes, int[] priorities, int numProcesses) {        //Writes fixed data to GUI
         clearViews();
 
         numOfProcessField.setText(Integer.toString(numProcesses));
@@ -176,6 +179,9 @@ public class MainViewController {
 
             processIDView.getItems().add(i);
             burstView.getItems().add(burstTimes[i]);
+
+            if(priorities[i] != 0) //prevents addition of priorities when it is not accounted for
+                priorityView.getItems().add(priorities[i]);
         }
         getNumOfFixedProcesses();
     }
@@ -237,7 +243,8 @@ public class MainViewController {
             addPSProcessToView(ps.getPSArray());
 
         } else if (type =="Fixed") {                //TODO Fixed Data PS
-            ps = null;
+            ps = new PSSim(numOfProcesses, burstTimes, priorities);
+            addPSProcessToView(ps.getPSArray());
         } else { ps = null;}
         waitAverage.setText(Double.toString(ps.getAverageWait()));
         taAverage.setText(Double.toString(ps.getAverageTA()));

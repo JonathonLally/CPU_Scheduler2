@@ -36,7 +36,7 @@ public class AddProcessController {
     @FXML    private Button minusBtn;
     @FXML    private Button plusBtn;
 
-    private int[] burstTimes;
+    private int[] burstTimes, priorities;
     private TextField[] burstTimeFields, priorityFields;
     private int numProcesses = 0;
 
@@ -72,6 +72,7 @@ public class AddProcessController {
         for(int i = 0; i < numProcesses + 1; i++) {
             try {
                 burstTimes[i] = Integer.parseInt(burstTimeFields[i].getText());
+                priorities[i] = Integer.parseInt(priorityFields[i].getText());
             } catch (NumberFormatException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -101,6 +102,8 @@ public class AddProcessController {
     public void setBurstArray(int [] burst) {
         this.burstTimes = burst;
     }
+
+    public void setPriorityArray(int[] priorities) { this.priorities = priorities; }
 
     public void setNumProcesses(int num) {
         this.numProcesses = num;
