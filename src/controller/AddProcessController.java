@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
-
+//Mostly Brendan Kiernan, closeWindow() and setters added by Jonathon Lally
 public class AddProcessController {
 
     @FXML    private TextField p0BurstField;
