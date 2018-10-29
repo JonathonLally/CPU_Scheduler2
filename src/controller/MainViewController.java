@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +48,8 @@ public class MainViewController {
             setOutputArea("Starting Shortest Job First Simulation");
             startSJF(getValueType());
         } else if (getAlgorithm() == "Shortest Remaining First") {
-            System.out.println("Starting SRF");
+            setOutputArea("Starting Shortest Remaining First Simulation");
+            startSRT(getValueType());
         } else if (getAlgorithm() == "Round Robin") {
             setOutputArea("Starting Round Robin");
             startRR(getValueType());
@@ -100,7 +102,7 @@ public class MainViewController {
         return valueTypeBox.getValue();
     }
 
-    public void launchAddProcess() {    //Launches Add Process Window for Fixed Values
+    public void launchAddProcess() {    //Launches Add Process Window in a New Window for Fixed Values
         try {
             Stage secondaryStage = new Stage();                                                             //Stage for new window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddProcessView.fxml"));  //loader contains location
@@ -124,11 +126,11 @@ public class MainViewController {
     }
 
 
-    public int getNumOfProcesses() {        //Gets number of processes from numofprocesses textfield RANDOM entry
+    public int getNumOfProcesses() {                        //Gets number of processes from numofprocesses textfield RANDOM entry
         return Integer.parseInt(numOfProcessField.getText());
     }
 
-    public void getNumOfFixedProcesses() {      //Gets number of processes from FIXED entry
+    public void getNumOfFixedProcesses() {                  //Gets number of processes from FIXED entry
         numOfProcesses = 0;
         for (int i=0; i<burstTimes.length;i++) {
             if (burstTimes[i] != 0) {
@@ -138,7 +140,7 @@ public class MainViewController {
         numOfProcessField.setText(Integer.toString(numOfProcesses));
     }
 
-    public void clearViews() {      //Clears ListViews and Average fields
+    public void clearViews() {                              //Clears ListViews and Average fields
         processIDView.getItems().clear();
         priorityView.getItems().clear();
         burstView.getItems().clear();
@@ -157,14 +159,11 @@ public class MainViewController {
 
         for(int i = 0; i < pArray.length; i++) {
             burstTime = pArray[i].getBurstTime();
-
             processIDView.getItems().add(pArray[i].getpId());
-            //not too sure what you want to do for arrival so I'm leaving this here for now
             burstView.getItems().add(burstTime);
             taView.getItems().add(burstTime + waitTime);
             waitView.getItems().add(waitTime);
             waitTime += burstTime;
-
         }
     }
 
@@ -191,6 +190,18 @@ public class MainViewController {
             taView.getItems().add(psArray[i].getTurnAroundTime());
             waitView.getItems().add(psArray[i].getWaitTime());
             priorityView.getItems().add(psArray[i].getPriority());
+        }
+    }
+
+    private void addSRTProcessToView(SRTProcess[] psArray) {    //Writes SRT Process to View
+        clearViews();
+
+        for (SRTProcess aPsArray : psArray) {
+            processIDView.getItems().add(aPsArray.getpId());
+            burstView.getItems().add(aPsArray.getBurstTime());
+            taView.getItems().add(aPsArray.getTurnAroundTime());
+            waitView.getItems().add(aPsArray.getWaitTime());
+            arrivalView.getItems().add(aPsArray.getArrivalTime());
         }
     }
 
@@ -319,12 +330,30 @@ public class MainViewController {
             ps = new PSSim(getNumOfProcesses());
             addPSProcessToView(ps.getPSArray());
 
-        } else if (type =="Fixed") {                //TODO Fixed Data PS
+        } else if (type =="Fixed") {
             ps = new PSSim(numOfProcesses, burstTimes, priorities);
             addPSProcessToView(ps.getPSArray());
         } else { ps = null;}
         waitAverage.setText(Double.toString(ps.getAverageWait()));
         taAverage.setText(Double.toString(ps.getAverageTA()));
+    }
+
+    public void startSRT(String type) {             //Starts a Shortest Remaining Time Simulation
+        SRTSim srt;
+
+        if(type == "Random") {
+            srt = new SRTSim(getNumOfProcesses());
+            addSRTProcessToView(srt.getsrtpArray());
+        } else if (type == "Fixed") {
+            srt = new SRTSim(numOfProcesses, burstTimes);
+            addSRTProcessToView(srt.getsrtpArray());
+        } else {srt = null; }
+        waitAverage.setText(Double.toString(srt.getAverageWait()));
+        taAverage.setText(Double.toString(srt.getAverageTA()));
+    }
+
+    public void exit() {        //Closes Application
+        Platform.exit();
     }
 
     public void startRR(String type) {          //Starts a Round Robin Simulation
