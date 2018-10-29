@@ -29,6 +29,7 @@ Creates GUI, Controlled via cpu.controller.MainViewController
             </Menu>
           <Menu mnemonicParsing="false" text="Extras">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#launchAboutView" text="About" />
               <MenuItem mnemonicParsing="false" text="Console (TBA)" />
             </items>
           </Menu>

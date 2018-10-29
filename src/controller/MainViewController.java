@@ -56,12 +56,12 @@ public class MainViewController {
         } else if (getAlgorithm() == "Priority Scheduling") {
             setOutputArea("Starting Priority Scheduling Simulation");
             startPS(getValueType());
-        } else System.out.println("Invalid");
+        } else setOutputArea("Invalid");
 
     }
     @FXML
     void initialize() {                             //Initializes MainView
-        System.out.println("Initializing MainView");
+        setOutputArea("Initializing MainView");
         burstTimes = new int[10];
         priorities = new int[10];
         populateComboBoxes();
@@ -79,6 +79,7 @@ public class MainViewController {
 
     }
 
+
     @FXML
     private void checkRR(ActionEvent event) {
         if(getAlgorithm().equals("Round Robin"))
@@ -93,9 +94,8 @@ public class MainViewController {
         algorithmBox.getSelectionModel().select(0);
     }
 
-    public String getAlgorithm() {          //Gets value of Algorithm ChoiceBox
-        String value = algorithmBox.getValue();
-        return value;
+    private String getAlgorithm() {          //Gets value of Algorithm ChoiceBox
+        return algorithmBox.getValue();
     }
 
     public String getValueType() {          //Gets value of Values ChoiceBox
@@ -107,15 +107,17 @@ public class MainViewController {
             Stage secondaryStage = new Stage();                                                             //Stage for new window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddProcessView.fxml"));  //loader contains location
             Parent root = loader.load();                                                                    //root for new Scene
-            AddProcessController launchCtrl = (AddProcessController)loader.getController();     //launchCtrl is controller object for add process
+            AddProcessController launchCtrl = loader.getController();     //launchCtrl is controller object for add process
 
             Arrays.fill(burstTimes, 0);                   //Clears array from any old values
             Arrays.fill(priorities, 0);
             launchCtrl.setBurstArray(burstTimes);           //Injecting Dependency
             launchCtrl.setPriorityArray(priorities);
 
-
-            secondaryStage.setScene(new Scene(root, 400, 400));                    //Sizes new window
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/resources/material-fx-v0_3.css").toExternalForm());
+            secondaryStage.setScene(scene);
+            //secondaryStage.setScene(new Scene(root, 400, 400));                    //Sizes new window
             secondaryStage.showAndWait();                                          //Show new window, and waits for it to close
             addFixedDataToView(burstTimes, priorities, 10);         //Assume 10, shrinks numOfProcesses later
 
@@ -125,8 +127,23 @@ public class MainViewController {
 
     }
 
+    public void launchAboutView() {     //Launches About us window
+        try {
+            Stage thirdStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AboutView.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/resources/material-fx-v0_3.css").toExternalForm());
+            thirdStage.setScene(scene);
+            thirdStage.show();
 
-    public int getNumOfProcesses() {                        //Gets number of processes from numofprocesses textfield RANDOM entry
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private int getNumOfProcesses() {                        //Gets number of processes from numofprocesses textfield RANDOM entry
         return Integer.parseInt(numOfProcessField.getText());
     }
 
@@ -140,7 +157,7 @@ public class MainViewController {
         numOfProcessField.setText(Integer.toString(numOfProcesses));
     }
 
-    public void clearViews() {                              //Clears ListViews and Average fields
+    private void clearViews() {                              //Clears ListViews and Average fields
         processIDView.getItems().clear();
         priorityView.getItems().clear();
         burstView.getItems().clear();

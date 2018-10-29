@@ -15,7 +15,9 @@ public class Main extends Application {         //Starts Application
         Parent root = loader.load();
         MainViewController mainCtrl = loader.getController();
         primaryStage.setTitle("CPU Scheduler");
-        primaryStage.setScene(new Scene(root, 600, 600));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/resources/material-fx-v0_3.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
