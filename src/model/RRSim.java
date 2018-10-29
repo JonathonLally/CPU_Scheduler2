@@ -53,9 +53,9 @@ public class RRSim extends Sim {
 
     private void calculateWaitsAndTA() {
         pList = new ArrayList<>();
-        orderList = new ArrayList<>();
+        orderList = new ArrayList<>(); //keeps track of the order these processes go through the algo
         Collections.addAll(pList, (RRProcess[])pArray);
-        boolean hasSwapped = true;
+        boolean hasSwapped = true; //noted as hasSwapped as that's what it would do in a queue
 
         while(hasSwapped) { //No way for this to be O(n). Trust me, I tried.
             hasSwapped = false;
@@ -66,41 +66,44 @@ public class RRSim extends Sim {
                 if(!(process.hasArrived()))
                     process.setArrivalTime(totalWait);
 
-                if(process.getTempBurst() < quantum) {
-                    process.setTurnAroundTime(process.getTurnAroundTime() + process.getTempBurst());
+                if(process.getTempBurst() <= quantum) {
+                    process.setTurnAroundTime(process.getTurnAroundTime() + process.getTempBurst()); //sets TAT to itself plus what the burst time would be
                     updateWaitTime(i, process.getTempBurst());
                     orderList.add(new RRProcess(process.getpId(), process.getTempBurst()));
-                    pList.remove(process);
+                    pList.remove(process); //once
                 } else {
                     System.out.println(process);
-                    process.setTurnAroundTime(process.getTurnAroundTime() + quantum);
+                    process.setTurnAroundTime(process.getTurnAroundTime() + quantum); //sets TAT to itself plus the quantum
                     updateWaitTime(i);
                     orderList.add(new RRProcess(process.getpId(), process.getTempBurst()));
-                    process.setTempBurst(process.getTempBurst() - quantum);
+                    process.setTempBurst(process.getTempBurst() - quantum); //subtracts quantum from tempBurst for future comparisons
                     hasSwapped = true;
                 }
             }
         }
 
+        //sets Sim values, at this point wait and TA times are absolute for processes
         for(RRProcess rp : (RRProcess[])pArray) {
             totalWait += rp.getWaitTime();
-            totalTATime += rp.getTurnAroundTime() + (rp.getWaitTime() - (rp.getWaitTime() - rp.getArrivalTime()));
+            totalTATime += rp.getTurnAroundTime() + (rp.getWaitTime() - rp.getArrivalTime());
         }
     }
 
+    //updates wait times except for process selected by calculateWaits and TA with the quantum
     private void updateWaitTime(int index) {
 
-        for(int i = 0; i < pArray.length; i++)
+        for(int i = 0; i < pList.size(); i++)
             if (i != index)
-                pArray[i].setWaitTime(pArray[i].getWaitTime() + quantum);
+                pList.get(i).setWaitTime(pList.get(i).getWaitTime() + quantum);
 
     }
 
+    //updates wait times except for process selected by calculateWaits and TA with a process' theoretical remaining burst time
     private void updateWaitTime(int index, int burstTime) {
 
-        for(int i = 0; i < pArray.length; i++)
+        for(int i = 0; i < pList.size(); i++)
             if(i != index)
-                pArray[i].setWaitTime(pArray[i].getWaitTime() + burstTime);
+                pList.get(i).setWaitTime(pList.get(i).getWaitTime() + burstTime);
 
     }
 
