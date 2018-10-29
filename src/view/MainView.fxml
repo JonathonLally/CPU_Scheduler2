@@ -17,7 +17,7 @@ Creates GUI, Controlled via cpu.controller.MainViewController
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
@@ -43,7 +43,7 @@ Creates GUI, Controlled via cpu.controller.MainViewController
          <children>
             <HBox prefHeight="43.0" prefWidth="481.0" spacing="50.0">
                <children>
-                  <ComboBox fx:id="algorithmBox" prefHeight="25.0" prefWidth="160.0" />
+                  <ComboBox fx:id="algorithmBox" onAction="#checkRR" prefHeight="25.0" prefWidth="160.0" />
                   <TextField fx:id="numOfProcessField" prefHeight="25.0" prefWidth="55.0" />
                   <ComboBox fx:id="valueTypeBox" onAction="#checkFixed" prefHeight="25.0" prefWidth="110.0" />
                </children>

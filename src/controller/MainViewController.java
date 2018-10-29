@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.*;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainViewController {
@@ -29,8 +31,11 @@ public class MainViewController {
     @FXML    private ListView taView;
     @FXML    private TextArea outputArea;
 
+    private TextInputDialog input = new TextInputDialog();
+    private Alert error = new Alert(Alert.AlertType.ERROR);
     private int[] burstTimes, priorities;
     private int numOfProcesses;
+    private int quantum = 0;
 
     //FXML Methods
     @FXML
@@ -46,7 +51,8 @@ public class MainViewController {
             setOutputArea("Starting Shortest Remaining First Simulation");
             startSRT(getValueType());
         } else if (getAlgorithm() == "Round Robin") {
-            setOutputArea("Starting Round Robin Simulation");
+            setOutputArea("Starting Round Robin");
+            startRR(getValueType());
         } else if (getAlgorithm() == "Priority Scheduling") {
             setOutputArea("Starting Priority Scheduling Simulation");
             startPS(getValueType());
@@ -73,7 +79,14 @@ public class MainViewController {
 
     }
 
-    private void populateComboBoxes() {      //Populates ComboBoxes
+
+    @FXML
+    private void checkRR(ActionEvent event) {
+        if(getAlgorithm().equals("Round Robin"))
+            displayInput("Input the time quantum desired");
+    }
+
+    public void populateComboBoxes() {      //Populates ComboBoxes
         valueTypeBox.getItems().addAll("Random", "Fixed");
         valueTypeBox.getSelectionModel().select(0);
         algorithmBox.getItems().addAll("First Come First Serve", "Shortest Job First", "Shortest Remaining First",
@@ -171,6 +184,20 @@ public class MainViewController {
         }
     }
 
+    private void addRRProcessToView(AProcess[] pArray) {      //Writes processSim to GUI
+        clearViews();
+
+        for(int i = 0; i < pArray.length; i++) {
+
+            processIDView.getItems().add(pArray[i].getpId());
+            //not too sure what you want to do for arrival so I'm leaving this here for now
+            burstView.getItems().add(pArray[i].getBurstTime());
+            taView.getItems().add(pArray[i].getTurnAroundTime());
+            waitView.getItems().add(pArray[i].getWaitTime());
+
+        }
+    }
+
     private void addPSProcessToView(PSProcess[] psArray) {      //Writes Priority Scheduling to GUI
         clearViews();
 
@@ -222,6 +249,16 @@ public class MainViewController {
         }
     }
 
+    private String generateListStr(ArrayList<RRProcess> list) {
+        StringBuilder listStr = new StringBuilder();
+
+        for (AProcess process : list)
+            listStr.append("[P").append(process.getpId()).append(" | Burst: ").append(process.getBurstTime()).
+                    append("]\n");
+
+        return listStr.toString();
+    }
+
     public void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
         try {
             outputArea.clear();
@@ -229,6 +266,47 @@ public class MainViewController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void displayInput(String content) {
+        input.setHeaderText("Define Time Quantum");
+        input.setContentText(content);
+        input.showAndWait();
+
+        try {
+            quantum = Integer.parseInt(input.getEditor().getText());
+        } catch (NumberFormatException ex) {
+            displayError("Invalid Input","Please input a valid integer.");
+        }
+
+        if(quantum < 0)  //easter egg
+            displayError("!!NEGATIVE TIME!!", "T̴̢̡͉̺͔̦͈̱ͨ̐͒̉̈̄ͫ͗̈́̌̐͒ͦ͋́ͅẖ̰̤͚̥͓̲̹̝̖̆̈́ͦ̽̒̍̊͐͐̏͗͐̂̄͢͟eͧ͑̓́" +
+                    "̊̓̇ͬ̃ͯ̌͊̓͊̓͊̄͛ͮ͏̥̖͙͇̜̘͔̀͜ ̞̞͈̟͆͂͆̈́́͠t͖͓̱̥̭̭̗͍͍̬ͦ̑̓̐́ͥ̅ͣͧ͐̆̔͜͟ȋ̛̋ͥͣͥ͝͝҉̘̲̳̦̣̙̜̺̭̻̱̣̥̱̣m̨̡̨̡̠̃̎̇̍͋ͦ͌͂̆̌ͫ͋͂͞" +
+                    "͉͔̞͎̳̗̰͇̪̩̭̗̭̝̫̩e͊ͧ͌ͪͫ͐̂̓ͥͪ̎ͯ͗ͭ̏͠҉̵̛͍̲͔ͅ ͕̪͉̻͚̫͙͕̼̪̪̻͔̯̗͕̜͎̮̽͒͒ͥ̃̐ͧͬ̿ͮ̿̓̽̋͐ͤ͠͞iͧ̈́͑ͣ̐̊̉̋ͦ̅ͥ̌ͭ̊̄͏̷̀͘" +
+                    "̞͕̠̱̲̘̯̜̦̣sͥ͒͐ͧ̏ͫ̈̆͌҉̨͕͉̠͚̞ ̾̆͛͂̇͋̿̽͒ͥͯ̐̅͗͌̚͘͏̴̴̷̮̝̗̠̜̝͍͕̹̣̥̻͙̟͖g̢̩̺̦̣͎͑̂̾̎ͣͤ̾ͦͤ̌̌͛̉͆͘͜͠͝o̿ͫ̓͂͛̐̄̃ͭ͗̊" +
+                    "̠͉̻̻͖͉̮̗̺̯̟͈͖̗ͮ͋̿ͦ̀͝n̨̧̛͖͎̮̼̻͎̭̐̆̒̄̉͟͢ͅͅḝͥͫͧ̐̊͏͇̱͇̼͍͖,ͭ͐ͮ̃̆͢͏̜͈̝͉̭͍͈͙̀́͠ͅͅ ̵̦̠͚͔͍̪ͭ͒ͧ̍ͨ̀͟͞t̵̓ͩ͆̊̆ͪ́̑͏" +
+                    "̙̬̱̖̝͎̫̮͈̱̖̲͖͍h̰̞̳̠͕̳̠̙ͧͥ̐͛̓͋̋͢ͅe͍̪͍̞͉̝̜̜̅ͧͦ̒́̓̑̈̀͠͠ ͌͐̏ͨ̂ͨ̿̒̆̈͊͌͆͢͡҉̮̱̯͜s̶̖̼͕͖̺̙̏̓̐̾̅͒ͬ̐̍̈̈́͐̍ͯ̚" +
+                    "ơ̩͈̮͎̳̬̱͈̥͚͖̺͙̻̙͙̞̳ͧ͛̉́̀n̴͎̫̣͕̻̬͋ͣ̿ͨͤ͑ͨ̃̒́̈́͆̐̚͜͜͝͝g̸̢̨̤̬̮̦͔͔̹͕̟̮̼̥͕ͮ̓̈́ͭ͟ ̧̧̘̬̲̳̜̹̫̻̣͆͋͊̈́ͥ̒̓̅͜͠͠i͂ͤ̑ͨ̂" +
+                    "̢̨̱̟̰͎̘̲̲̓͊̌̋͗ͮ́́̀͗̓͛̽ṣ̷̢̦̣͈̦̬͙̻̗̗̣ͫͣ̑͆̏̇̀̐ͧͫ͜ ̶͕͖̫̞͎͕̫̜̻͕̫̱̥̙͍̏̇ͣ͌̍̎ͭͮ̎͆̏͐ͮͮ̕͘͢͡ȯ̀̀̓ͣ̾ͤ̾̅̉͑ͩ̌ͪ͏҉̳̫̣̭̭͙͕̝͙" +
+                    "̦̠͔v̶̢̘̦̞̠̜̯͖̙̒ͬ́̔͘͞éͧ̒̓ͩ̽͋̿ͣ͒̔ͪ̔̿҉͞҉̢͕͓̦̱̪̜͘r̵̶̛̥̭̯͚̥͎͉ͣ̄ͬ͌̎ͦ̑̇̀ͮ̈ͨ̓̚.̦̮̻̱͔̮͍ͯ̃ͭ̒ͯ̆ͤ̄ͫ̾̊̒ͤͭ̾̿́̕ ̐ͯ" +
+                    "̵̶̛̤͕͈̬̝̤̲̥̪̗̎͘͡T̡͍̮̗̺͆̅̅̋ͣ̒̇̎̌ͪ̕͟h̷̴̴̷̭̩͎̹̲̲̖̰̲ͩ̋͒̓̍̒ͫͭ̚ơ̢̨̫̠͖͓̱̘ͣ̊̐̑͐̋ͥͧ͋ͬ̎ͮ͆̐̽ͤ̐̌̀͞uͤ͒̈͆̇ͥ͛͑ͣ́" +
+                    "̸̞̖̱̯̜̞͕̮̩̰̓̓͐ͨ͌̀́̚̚g̅ͭ͌̓̔̏͒̀̑͂͐͋͗̓̒͐ͦͯ͡҉̸̖͙̩̝̘̮͎̗͖͉̺̙̤̤̖h̷̢̜̲͙̹͙̗̺̗̻͈̦͛͒̾͒͛͋̿͗̓̏̒͋̂̇ͭ͠t̷̨̃ͫͩͤ̃́҉̬̣̥̳̕͢" +
+                    "̗̤͕̠͍͖̠̯͉̠̲̰̦̼ ̶̡̮̭̦̦͇̬͉͔̺̫͈̟͌͗ͫͧ͊̍̔̆ͯ̌͗ͤ̓ͧ̃͌͗̌̓͢ͅͅĮ̛͎̥̮̩̞̠̫̺͓̘̎̌̒̊ͧ̒̃ͥ̓̏ͩ͌̃͢͢͡'̸̴̼̟̩̮̻̟̩̅ͩͦ̏̇͂͂ͥ̉" +
+                    "͚͈̟d̸̡̦͎̘̳͔͙͉͍̗̮̓̅ͩ͋̑͗̃ͥ̍ͤ͋̇̇ͧ̚͘͢ ̴̝̼̟͖̣̗̦͓͕͈̥̣̥̤̺̜̪̬̙̎̃̅̃̈͂̎ͪ͑͐̕s̹̬͉͕̪̲̥̹͙̫̖̯͕̾̃̅ͤ̓̕͠o̸̿̄ͭ́ͣͤ̂̃̉̓̐̋̇͒̀̚͢͞" +
+                    "̧̘̫̻͓̜͚̰̙̝͙͉̣̬̭m͒̅ͨͪͤ͂҉̨̨̠̹͖͇̺̱̣̥̞̥̫͈͉̳͚̕͡ę̡̰̫̞̩͉̻̼̲̝̗͈̗̼̆̋͒̈ͪͤ̔̍̉̃͗ͬ̔̄ț̷͈͕̹̺̠̝̥̲ͧͨ̒̅̀ͯ̏̃ͧ̍̊ͪ̂͐̒͛ͯ̒͂͜͞" +
+                    "̫̹̪̪̘̭h̶̡̖̖̼͚̯̠̤̺̙̦̟̥̳̼̺̫͗ͯͮ̎̊ͥ̒ͪͫ̽̿̽̋ͪ̽͌͋͝͡i̸̮͍̣̦̮̙͙̙̲͆̌̐̓̿̆̽́͘͠n̴̬̬̻̗͎̺̯̠̙̩̮͕̝̗ͪ̉̐̽̍͒ͣ̽̓̇̕͡ͅǵ͆̎ͤ̈" +
+                    "̸̶̵̺͓̹̹͈̗̜͇̬͇͇̞̳̮̹̙̟̳̖̓̒̊̿ͪ͋̍̄ͮ̚ ̦̱͈ͨͨ̋̍̐ͥ̆̔̌ͧ̅ͪͥ͋̾͒ͫ͗͞m̛͍̻͙̜̗̌̄ͤ̋͌̾ͮ̅͛͊̉͟͝o̴̭̠̘̘̜͓̙̩͓̜̹̫ͭ́̋͛̂́͘̕͢" +
+                    "͈̦̙̯͈r̷͕͖͖̠̣̪̪͈͔͍̻ͭͧ̽̒͒̂̓̄̇̔̽ͧ̚͘͘ë̸̘͉̟̟͉̬͈̱͇͕̓̃ͭ̍̔̽ͧ͘͡ͅ ̍̃̄͐͆̅ͭ̇̆̊͆̿ͭͯ̍ͯͭ͢͝͏̵̳̻̗͚̟̤̹͓̝̲t̒ͬ͌ͭ̌̏̋̂͊ͫͦ̿ͦ" +
+                    "ͨ̄҉̪̻͇͙͢͢ő̑̏̅̐ͣ̆͂̎̋̌́҉͏̶͚͍͓̠̺̹̺̭̣͕͙̮͘ͅ ̨̠̣̼̩̹̬͉͍̥̜̮̝̠͈͚͍͎̍ͮͣ̃̄͑͋ͨ͋̇̆̃̋̾̈́ͦ̒͌͘͠͝sͭ̓ͥͦ͌́͏̡̧̫̯̳͙̀͞ͅ" +
+                    "͎̯̠ą̛̼͙̫̺̖̫͇̱͋̉̅̏͑͛̇̑̑̽͐ͧ͋ͧͮ̀͝͡ỳ̴̴̧̯̲̰͚̼̼̥̦͈̤͔̞̭͖̱͍ͧ͌ͨ̊̀ͥ́ͅ.̸̨ͧͧͤ͆̀̓ͦ͂҉̹͓̝̦͙̫̟̲͇ͅ");
+
+
+    }
+
+    private void displayError(String head, String content) {
+        error.setHeaderText(head);
+        error.setContentText(content);
+        error.showAndWait();
     }
 
     public void startFCFS(String type) {                //Starts a first come first serve Sim
@@ -293,6 +371,22 @@ public class MainViewController {
 
     public void exit() {        //Closes Application
         Platform.exit();
+    }
+
+    public void startRR(String type) {          //Starts a Round Robin Simulation
+        RRSim rr;
+
+        if(type == "Random") {
+            rr = new RRSim(getNumOfProcesses(), quantum);
+            addRRProcessToView(rr.getpArray());
+            setOutputArea(outputArea.getText() + "\n" + generateListStr(rr.getOrderList()));
+        } else if(type.equals("Fixed")) {
+            rr = new RRSim(numOfProcesses, burstTimes, quantum);
+            addRRProcessToView(rr.getpArray());
+            setOutputArea(outputArea.getText() + "\n" + generateListStr(rr.getOrderList()));
+        } else { rr = null; };
+        waitAverage.setText(Double.toString(rr.getAverageWait()));
+        taAverage.setText(Double.toString(rr.getAverageTA()));
     }
 
 }
