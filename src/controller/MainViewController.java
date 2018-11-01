@@ -39,22 +39,31 @@ public class MainViewController {
     @FXML
     void startSim(ActionEvent event) {           //This starts a simulation, activated by calculate button
 
-        if (getAlgorithm() == "First Come First Serve") {
-            setOutputArea("Starting First Come First Serve Simulation");
-            startFCFS(getValueType());
-        } else if (getAlgorithm() == "Shortest Job First") {
-            setOutputArea("Starting Shortest Job First Simulation");
-            startSJF(getValueType());
-        } else if (getAlgorithm() == "Shortest Remaining First") {
-            setOutputArea("Starting Shortest Remaining First Simulation");
-            startSRT(getValueType());
-        } else if (getAlgorithm() == "Round Robin") {
-            setOutputArea("Starting Round Robin");
-            startRR(getValueType());
-        } else if (getAlgorithm() == "Priority Scheduling") {
-            setOutputArea("Starting Priority Scheduling Simulation");
-            startPS(getValueType());
-        } else setOutputArea("Invalid");
+        switch (getAlgorithm()) {
+            case "First Come First Serve":
+                setOutputArea("Starting First Come First Serve Simulation");
+                startFCFS(getValueType());
+                break;
+            case "Shortest Job First":
+                setOutputArea("Starting Shortest Job First Simulation");
+                startSJF(getValueType());
+                break;
+            case "Shortest Remaining First":
+                setOutputArea("Starting Shortest Remaining First Simulation");
+                startSRT(getValueType());
+                break;
+            case "Round Robin":
+                setOutputArea("Starting Round Robin");
+                startRR(getValueType());
+                break;
+            case "Priority Scheduling":
+                setOutputArea("Starting Priority Scheduling Simulation");
+                startPS(getValueType());
+                break;
+            default:
+                setOutputArea("Invalid");
+                break;
+        }
 
     }
     @FXML
@@ -68,23 +77,22 @@ public class MainViewController {
 
     @FXML
     void checkFixed(ActionEvent event) {            //This method activates if "Fixed" is chosen from Data Type ComboBox
-        if (getValueType() == "Fixed") {
+        if (getValueType().equals("Fixed")) {
             launchAddProcess();
-        } else if (getValueType() == "Random") {
+        } else if (getValueType().equals("Random")) {
             clearViews();
             addProcesses();
         }
 
     }
 
-
     @FXML
-    private void checkRR(ActionEvent event) {
+    private void checkRR(ActionEvent event) {       //Checks if RR is selected in the algorithmBox ComboBox
         if(getAlgorithm().equals("Round Robin"))
             inputQuantum();
     }
 
-    public void populateComboBoxes() {      //Populates ComboBoxes
+    private void populateComboBoxes() {      //Populates ComboBoxes
         valueTypeBox.getItems().addAll("Random", "Fixed");
         valueTypeBox.getSelectionModel().select(0);
         algorithmBox.getItems().addAll("First Come First Serve", "Shortest Job First", "Shortest Remaining First",
@@ -92,22 +100,14 @@ public class MainViewController {
         algorithmBox.getSelectionModel().select(0);
     }
 
-    private String getAlgorithm() {          //Gets value of Algorithm ChoiceBox
-        return algorithmBox.getValue();
-    }
-
-    public String getValueType() {          //Gets value of Values ChoiceBox
-        return valueTypeBox.getValue();
-    }
-
     public void launchAddProcess() {    //Launches Add Process Window in a New Window for Fixed Values
         try {
-            Stage secondaryStage = new Stage();                                                             //Stage for new window
+            Stage secondaryStage = new Stage();                                                              //Stage for new window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddProcessView.fxml"));  //loader contains location
             Parent root = loader.load();                                                                    //root for new Scene
             AddProcessController launchCtrl = loader.getController();     //launchCtrl is controller object for add process
 
-            Arrays.fill(burstTimes, 0);                   //Clears array from any old values
+            Arrays.fill(burstTimes, 0);                 //Clears array from any old values
             Arrays.fill(priorities, 0);
             launchCtrl.setBurstArray(burstTimes);           //Injecting Dependency
             launchCtrl.setPriorityArray(priorities);
@@ -140,18 +140,38 @@ public class MainViewController {
         }
     }
 
+    private void addProcesses() {        //Adds pIDs to view if random is selected, just pIds no value until sim
+        clearViews();
+        numOfProcesses = getNumOfProcesses();
 
-    private int getNumOfProcesses() {                        //Gets number of processes from numofprocesses textfield RANDOM entry
-        return Integer.parseInt(numOfProcessField.getText());
+        for(int i = 0; i < numOfProcesses; i++) {
+            processIDView.getItems().addAll(i);
+        }
     }
 
-    public void getNumOfFixedProcesses() {                  //Gets number of processes from FIXED entry
-        numOfProcesses = 0;
-        for (int i=0; i<burstTimes.length;i++) {
-            if (burstTimes[i] != 0) {
-                numOfProcesses++;
+    private int getNumOfProcesses() {                        //Gets number of processes from numofprocesses textfield RANDOM entry
+        try {
+            int parsed = Integer.parseInt(numOfProcessField.getText());
+
+            if(parsed < 1 || parsed > 10) {
+                displayError("Out of Range", "Please enter an integer between 1 and 10.");
+                return 1; //defaults to 1 since I don't want to check in every startSim method
             }
+
+            return parsed;
+        } catch (NumberFormatException ex) {
+            displayError("Invalid Format", "Please enter an integer between 1 and 10.");
+            return 1;
         }
+    }
+
+    private void getNumOfFixedProcesses() {                  //Gets number of processes from FIXED entry
+        numOfProcesses = 0;
+
+        for (int burstTime : burstTimes)
+            if (burstTime != 0)
+                numOfProcesses++;
+
         numOfProcessField.setText(Integer.toString(numOfProcesses));
     }
 
@@ -172,9 +192,9 @@ public class MainViewController {
         int waitTime = 0;
         int burstTime;
 
-        for(int i = 0; i < pArray.length; i++) {
-            burstTime = pArray[i].getBurstTime();
-            processIDView.getItems().add(pArray[i].getpId());
+        for(AProcess process : pArray) {
+            burstTime = process.getBurstTime();
+            processIDView.getItems().add(process.getpId());
             burstView.getItems().add(burstTime);
             taView.getItems().add(burstTime + waitTime);
             waitView.getItems().add(waitTime);
@@ -182,17 +202,16 @@ public class MainViewController {
         }
     }
 
-    private void addRRProcessToView(AProcess[] pArray) {      //Writes processSim to GUI
+    private void addRRProcessToView(AProcess[] pArray) {      //Writes Round Robin to GUI
         clearViews();
 
-        for(int i = 0; i < pArray.length; i++) {
+        for(AProcess process : pArray) {
 
-            processIDView.getItems().add(pArray[i].getpId());
-            //not too sure what you want to do for arrival so I'm leaving this here for now
-            burstView.getItems().add(pArray[i].getBurstTime());
-            arrivalView.getItems().add(((RRProcess)pArray[i]).getArrivalTime());
-            taView.getItems().add(pArray[i].getTurnAroundTime());
-            waitView.getItems().add(pArray[i].getWaitTime());
+            processIDView.getItems().add(process.getpId());
+            burstView.getItems().add(process.getBurstTime());
+            arrivalView.getItems().add(((RRProcess)process).getArrivalTime());
+            taView.getItems().add(process.getTurnAroundTime());
+            waitView.getItems().add(process.getWaitTime());
 
         }
     }
@@ -200,12 +219,12 @@ public class MainViewController {
     private void addPSProcessToView(PSProcess[] psArray) {      //Writes Priority Scheduling to GUI
         clearViews();
 
-        for(int i = 0; i < psArray.length; i++) {
-            processIDView.getItems().add(psArray[i].getpId());
-            burstView.getItems().add(psArray[i].getBurstTime());
-            taView.getItems().add(psArray[i].getTurnAroundTime());
-            waitView.getItems().add(psArray[i].getWaitTime());
-            priorityView.getItems().add(psArray[i].getPriority());
+        for(PSProcess process : psArray) {
+            processIDView.getItems().add(process.getpId());
+            burstView.getItems().add(process.getBurstTime());
+            taView.getItems().add(process.getTurnAroundTime());
+            waitView.getItems().add(process.getWaitTime());
+            priorityView.getItems().add(process.getPriority());
         }
     }
 
@@ -221,7 +240,7 @@ public class MainViewController {
         }
     }
 
-    public void addFixedDataToView(int[] burstTimes, int[] priorities, int numProcesses) {        //Writes fixed data to GUI
+    private void addFixedDataToView(int[] burstTimes, int[] priorities, int numProcesses) {        //Writes fixed data to GUI
         clearViews();
 
         numOfProcessField.setText(Integer.toString(numProcesses));
@@ -233,19 +252,92 @@ public class MainViewController {
             processIDView.getItems().add(i);
             burstView.getItems().add(burstTimes[i]);
 
-            if(priorities[i] != 0) //prevents addition of priorities when it is not accounted for
+            if(priorities[i] != 0) //prevents addition of priorities when they are not accounted for
                 priorityView.getItems().add(priorities[i]);
         }
+
         getNumOfFixedProcesses();
     }
 
-    public void addProcesses() {        //Adds pIDs to view if random is selected, just pIds no value until sim
-        clearViews();
-        numOfProcesses = getNumOfProcesses();
+    private void startFCFS(String type) {                //Starts a First Come First Serve Sim
+        FCFSSim fcfs;
 
-        for(int i = 0; i < numOfProcesses; i++) {
-            processIDView.getItems().addAll(i);
-        }
+        if(type == "Random") {
+            fcfs = new FCFSSim(getNumOfProcesses());
+            addProcessToView(fcfs.getpArray());
+        } else if (type == "Fixed") {
+            fcfs = new FCFSSim(numOfProcesses, burstTimes);
+            addProcessToView(fcfs.getpArray());
+        } else { fcfs = null; }
+
+        waitAverage.setText(Double.toString(fcfs.getAverageWait()));
+        taAverage.setText(Double.toString(fcfs.getAverageTA()));
+    }
+
+
+    private void startSJF(String type) {             //Starts a Shortest Job First Sim
+        SJFSim sjf;
+
+        if(type == "Random") {
+            sjf = new SJFSim(getNumOfProcesses());
+            addProcessToView(sjf.getpArray());
+        } else if (type == "Fixed") {
+            sjf = new SJFSim(numOfProcesses, burstTimes);
+            addProcessToView(sjf.getpArray());
+        } else { sjf = null; }
+
+        waitAverage.setText(Double.toString(sjf.getAverageWait()));
+        taAverage.setText(Double.toString(sjf.getAverageTA()));
+    }
+
+
+    private void startPS(String type) {          //Starts a Priority Scheduling Simulation
+        PSSim ps;
+
+        if(type.equals("Random")) {
+            ps = new PSSim(getNumOfProcesses());
+            addPSProcessToView(ps.getPSArray());
+        } else if (type.equals("Fixed")) {
+            ps = new PSSim(numOfProcesses, burstTimes, priorities);
+            addPSProcessToView(ps.getPSArray());
+        } else { ps = null;}
+
+        waitAverage.setText(Double.toString(ps.getAverageWait()));
+        taAverage.setText(Double.toString(ps.getAverageTA()));
+    }
+
+    private void startSRT(String type) {             //Starts a Shortest Remaining Time Simulation
+        SRTSim srt;
+
+        if(type.equals("Random")) {
+            srt = new SRTSim(getNumOfProcesses());
+            addSRTProcessToView(srt.getsrtpArray());
+        } else if (type.equals("Fixed")) {
+            srt = new SRTSim(numOfProcesses, burstTimes);
+            addSRTProcessToView(srt.getsrtpArray());
+        } else {srt = null; }
+
+        waitAverage.setText(Double.toString(srt.getAverageWait()));
+        taAverage.setText(Double.toString(srt.getAverageTA()));
+    }
+
+    private void startRR(String type) {          //Starts a Round Robin Simulation
+        RRSim rr;
+        outputArea.clear();
+
+        if(type.equals("Random")) {
+            rr = new RRSim(getNumOfProcesses(), quantum);
+            addRRProcessToView(rr.getpArray());
+            setOutputArea(generateListStr(rr.getOrderList())); //gives order of processes
+        } else if(type.equals("Fixed")) {
+            rr = new RRSim(numOfProcesses, burstTimes, quantum);
+            addRRProcessToView(rr.getpArray());
+
+            setOutputArea(generateListStr(rr.getOrderList()));
+        } else { rr = null; }
+
+        waitAverage.setText(Double.toString(rr.getAverageWait()));
+        taAverage.setText(Double.toString(rr.getAverageTA()));
     }
 
     private String generateListStr(ArrayList<RRProcess> list) {
@@ -285,7 +377,7 @@ public class MainViewController {
                         "ͨ̄҉̪̻͇͙͢͢ő̑̏̅̐ͣ̆͂̎̋̌́҉͏̶͚͍͓̠̺̹̺̭̣͕͙̮͘ͅ ̨̠̣̼̩̹̬͉͍̥̜̮̝̠͈͚͍͎̍ͮͣ̃̄͑͋ͨ͋̇̆̃̋̾̈́ͦ̒͌͘͠͝sͭ̓ͥͦ͌́͏̡̧̫̯̳͙̀͞ͅ" +
                         "͎̯̠ą̛̼͙̫̺̖̫͇̱͋̉̅̏͑͛̇̑̑̽͐ͧ͋ͧͮ̀͝͡ỳ̴̴̧̯̲̰͚̼̼̥̦͈̤͔̞̭͖̱͍ͧ͌ͨ̊̀ͥ́ͅ.̸̨ͧͧͤ͆̀̓ͦ͂҉̹͓̝̦͙̫̟̲͇ͅ");
 
-                algorithmBox.getSelectionModel().select(0);
+                algorithmBox.getSelectionModel().select(0); //selects FCFS
                 quantum = 0;
             }
         } catch (NumberFormatException ex) {
@@ -294,7 +386,7 @@ public class MainViewController {
         }
     }
 
-    public void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
+    private void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
         try {
             outputArea.clear();
             outputArea.setText(in);
@@ -303,96 +395,28 @@ public class MainViewController {
         }
     }
 
-    private void displayInput(String head, String content) {
+    private void displayInput(String head, String content) {    //sets text for the InputDialog and displays it
         input.setHeaderText(head);
         input.setContentText(content);
         input.showAndWait();
     }
 
-    private void displayError(String head, String content) {
+    private void displayError(String head, String content) {    //sets text for the Alert and displays it
         error.setHeaderText(head);
         error.setContentText(content);
         error.showAndWait();
-    }
-
-    public void startFCFS(String type) {                //Starts a first come first serve Sim
-        FCFSSim fcfs;
-
-        if(type == "Random") {
-            fcfs = new FCFSSim(getNumOfProcesses());
-            addProcessToView(fcfs.getpArray());
-        } else if (type == "Fixed") {
-            fcfs = new FCFSSim(numOfProcesses, burstTimes);
-            addProcessToView(fcfs.getpArray());
-        } else { fcfs = null; }
-        waitAverage.setText(Double.toString(fcfs.getAverageWait()));
-        taAverage.setText(Double.toString(fcfs.getAverageTA()));
-    }
-
-
-    public void startSJF(String type) {             //Starts a Shortest Job First Sim
-
-        SJFSim sjf;
-
-        if(type == "Random") {
-            sjf = new SJFSim(getNumOfProcesses());
-            addProcessToView(sjf.getpArray());
-        } else if (type == "Fixed") {
-            sjf = new SJFSim(numOfProcesses, burstTimes);
-            addProcessToView(sjf.getpArray());
-        } else { sjf = null; }      
-        waitAverage.setText(Double.toString(sjf.getAverageWait()));
-        taAverage.setText(Double.toString(sjf.getAverageTA()));
-    }
-
-
-    public void startPS(String type) {          //Starts a Priority Scheduling Simulation
-        PSSim ps;
-
-        if(type == "Random") {
-            ps = new PSSim(getNumOfProcesses());
-            addPSProcessToView(ps.getPSArray());
-
-        } else if (type =="Fixed") {
-            ps = new PSSim(numOfProcesses, burstTimes, priorities);
-            addPSProcessToView(ps.getPSArray());
-        } else { ps = null;}
-        waitAverage.setText(Double.toString(ps.getAverageWait()));
-        taAverage.setText(Double.toString(ps.getAverageTA()));
-    }
-
-    public void startSRT(String type) {             //Starts a Shortest Remaining Time Simulation
-        SRTSim srt;
-
-        if(type == "Random") {
-            srt = new SRTSim(getNumOfProcesses());
-            addSRTProcessToView(srt.getsrtpArray());
-        } else if (type == "Fixed") {
-            srt = new SRTSim(numOfProcesses, burstTimes);
-            addSRTProcessToView(srt.getsrtpArray());
-        } else {srt = null; }
-        waitAverage.setText(Double.toString(srt.getAverageWait()));
-        taAverage.setText(Double.toString(srt.getAverageTA()));
     }
 
     public void exit() {        //Closes Application
         Platform.exit();
     }
 
-    public void startRR(String type) {          //Starts a Round Robin Simulation
-        RRSim rr;
+    private String getAlgorithm() {          //Gets value of Algorithm ChoiceBox
+        return algorithmBox.getValue();
+    }
 
-        if(type == "Random") {
-            rr = new RRSim(getNumOfProcesses(), quantum);
-            addRRProcessToView(rr.getpArray());
-            setOutputArea(outputArea.getText() + "\n" + generateListStr(rr.getOrderList()));
-        } else if(type.equals("Fixed")) {
-            rr = new RRSim(numOfProcesses, burstTimes, quantum);
-            addRRProcessToView(rr.getpArray());
-            setOutputArea(outputArea.getText() + "\n" + generateListStr(rr.getOrderList()));
-        } else { rr = null; };
-        waitAverage.setText(Double.toString(rr.getAverageWait()));
-        taAverage.setText(Double.toString(rr.getAverageTA()));
+    private String getValueType() {          //Gets value of Values ChoiceBox
+        return valueTypeBox.getValue();
     }
 
 }

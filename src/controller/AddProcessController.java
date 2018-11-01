@@ -105,11 +105,6 @@ public class AddProcessController {
 
     public void setPriorityArray(int[] priorities) { this.priorities = priorities; }
 
-    public void setNumProcesses(int num) {
-        this.numProcesses = num;
-    }
-
-
     public void switchVisibility(int index) {
         TextField[] toSwitch = {burstTimeFields[index], priorityFields[index]};
 
