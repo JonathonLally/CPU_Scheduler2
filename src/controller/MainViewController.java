@@ -72,7 +72,7 @@ public class MainViewController {
         burstTimes = new int[10];
         priorities = new int[10];
         populateComboBoxes();
-        setOutputArea("Welcome to Process Project");
+        setOutputArea("Welcome to CPU Scheduling Project");
     }
 
     @FXML
@@ -153,14 +153,14 @@ public class MainViewController {
         try {
             int parsed = Integer.parseInt(numOfProcessField.getText());
 
-            if(parsed < 1 || parsed > 10) {
-                displayError("Out of Range", "Please enter an integer between 1 and 10.");
+            if(parsed < 1 || parsed > 100) {
+                displayError("Out of Range", "Please enter an integer between 1 and 100.");
                 return 1; //defaults to 1 since I don't want to check in every startSim method
             }
 
             return parsed;
         } catch (NumberFormatException ex) {
-            displayError("Invalid Format", "Please enter an integer between 1 and 10.");
+            displayError("Invalid Format", "Please enter an integer between 1 and 100.");
             return 1;
         }
     }
