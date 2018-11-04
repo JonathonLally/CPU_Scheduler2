@@ -24,7 +24,7 @@ public class PSSim extends Sim {            //Priority Scheduling Simulation
         calculateWaitsAndTA();
     }
 
-    public void fillpArray() {              //Fills pArray with Random Data
+    private void fillpArray() {              //Fills pArray with Random Data
         Random r = new Random();
         for(int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new PSProcess(i, r.nextInt(10 ) + 1, r.nextInt(10) + 1);
@@ -38,19 +38,19 @@ public class PSSim extends Sim {            //Priority Scheduling Simulation
 
     }
 
-    public PSProcess[] sortpArray(PSProcess[] psArray) {        //Sorts PSProcess Array by Priority
+    private PSProcess[] sortpArray(PSProcess[] psArray) {        //Sorts PSProcess Array by Priority
         Arrays.sort(psArray, (psProcess, t1) -> psProcess.getPriority() > t1.getPriority() ? 1 : -1);
         return psArray;
     }
 
-    public void calculateWaitsAndTA() {             //Assigns wait and turn around time to pArray
+    private void calculateWaitsAndTA() {             //Assigns wait and turn around time to pArray
         counter = 0;
-        for (int i = 0; i < pArray.length; i++) {
-            pArray[i].setWaitTime(counter);
+        for (PSProcess aPArray : pArray) {
+            aPArray.setWaitTime(counter);
             totalWait += counter;
-            pArray[i].setTurnAroundTime(counter + pArray[i].getBurstTime());
-            totalTATime += pArray[i].getTurnAroundTime();
-            counter += pArray[i].getBurstTime();
+            aPArray.setTurnAroundTime(counter + aPArray.getBurstTime());
+            totalTATime += aPArray.getTurnAroundTime();
+            counter += aPArray.getBurstTime();
         }
         calculateAverageWait();
         calculateAverageTA();

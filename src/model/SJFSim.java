@@ -27,38 +27,36 @@ public class SJFSim extends Sim {            //Shortest Job First Simulation
         calculateTotals();
     }
 
-    public void fillpArray() {                                  //Fills pArray for RandomData
+    private void fillpArray() {                                  //Fills pArray for RandomData
         Random r = new Random();
         for (int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new SJFProcess(i, r.nextInt(10) + 1);
         }
     }
 
-    public AProcess[] sortArray(AProcess[] sjfArray) {          //Sorts Array by comparing burst times
+    private void sortArray(AProcess[] sjfArray) {          //Sorts Array by comparing burst times
         //Comparator is used to indicate burstTime
         Arrays.sort(sjfArray, (sjfProcess, t1) -> sjfProcess.getBurstTime() > t1.getBurstTime() ? 1 : -1);
-        return sjfArray;
     }
 
-    public void fillFixedpArray(int[] in) {                     //Fills pArray for Fixed Data
+    private void fillFixedpArray(int[] in) {                     //Fills pArray for Fixed Data
         for (int i =0; i < numOfProcesses; i++) {
             pArray[i] = new SJFProcess(i, in[i]);
         }
     }
 
-    public void assignWaitAndTA() {          //Assigns wait and turn around times to processes
+    private void assignWaitAndTA() {          //Assigns wait and turn around times to processes
         counter = 0;
-        for (int i = 0; i<pArray.length; i++) {
-            pArray[i].setWaitTime(counter);
-            pArray[i].setTurnAroundTime(counter + pArray[i].getBurstTime());
-            counter += pArray[i].getBurstTime();
+        for (AProcess aPArray : pArray) {
+            aPArray.setWaitTime(counter);
+            aPArray.setTurnAroundTime(counter + aPArray.getBurstTime());
+            counter += aPArray.getBurstTime();
 
         }
 
     }
 
-
-    public void calculateTotals() {                             //Calculates Total Wait and Turn Around Time for Sim
+    private void calculateTotals() {                             //Calculates Total Wait and Turn Around Time for Sim
         for (AProcess aPArray : pArray) {
             totalWait+= aPArray.getWaitTime();
             totalTATime+= aPArray.getTurnAroundTime();

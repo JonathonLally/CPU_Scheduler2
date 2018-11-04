@@ -340,6 +340,7 @@ public class MainViewController {
         taAverage.setText(Double.toString(rr.getAverageTA()));
     }
 
+    //generates a string based on the orderList returned by RRSim
     private String generateListStr(ArrayList<RRProcess> list) {
         StringBuilder listStr = new StringBuilder();
 
@@ -350,6 +351,7 @@ public class MainViewController {
         return listStr.toString();
     }
 
+    //allows the user to input the time quantum for the Round Robin algorithm
     private void inputQuantum() {
         displayInput("Define Time Quantum", "Please enter the desired quantum");
 

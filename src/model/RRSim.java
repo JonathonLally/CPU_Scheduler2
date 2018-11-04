@@ -37,6 +37,7 @@ public class RRSim extends Sim {
         calculateAverageWait();
     }
 
+    //fills pArray with random values
     private void fillpArray() {
         Random r = new Random();
 
@@ -45,6 +46,7 @@ public class RRSim extends Sim {
 
     }
 
+    //fills pArray with fixed values parsed in from AddProcessView
     private void fillpArrayFixed(int[] burstTimes) {
 
         for(int i = 0; i < numOfProcesses; i++)
@@ -92,14 +94,14 @@ public class RRSim extends Sim {
 
         //sets Sim values, at this point wait and TA times are absolute for processes
         for(RRProcess rp : (RRProcess[])pArray) {
-            int turnAround = rp.getTurnAroundTime() + (rp.getWaitTime()); //this may be the wrong way to do it
+            int turnAround = rp.getTurnAroundTime() + (rp.getWaitTime());
             rp.setTurnAroundTime(turnAround);
             totalWait += rp.getWaitTime();
             totalTATime += turnAround;
         }
     }
 
-    //updates wait times except for process selected by calculateWaits and TA with the quantum
+    //updates wait times except for process selected by calculateWaitsAndTA with the quantum
     private void updateWaitTime(int index) {
 
         for(int i = 0; i < pList.size(); i++)
@@ -108,7 +110,7 @@ public class RRSim extends Sim {
 
     }
 
-    //updates wait times except for process selected by calculateWaits and TA with a process' theoretical remaining burst time
+    //updates wait times except for process selected by calculateWaitsAndTA with a process' theoretical remaining burst time
     private void updateWaitTime(int index, int burstTime) {
 
         for(int i = 0; i < pList.size(); i++)

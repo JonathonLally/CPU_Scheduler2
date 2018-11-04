@@ -66,7 +66,7 @@ public class AddProcessController {
 
     }
 
-    @FXML
+    @FXML //parses the TextFields to integers and closes the stage if things work correctly
     private void confirmBtnPressed(ActionEvent event) {
 
         for(int i = 0; i < numProcesses + 1; i++) {
@@ -81,7 +81,7 @@ public class AddProcessController {
 
     }
 
-    @FXML
+    @FXML //reduces numProcesses and number of TextFields visible
     private void minusBtnPressed(ActionEvent event) {
         if(numProcesses != 0) {
             switchVisibility(numProcesses);
@@ -90,7 +90,7 @@ public class AddProcessController {
         }
     }
 
-    @FXML
+    @FXML //increases numProcesses and number of TextFields visible
     private void plusBtnPressed(ActionEvent event) {
         if(numProcesses != 9) {
             numProcesses++;
@@ -99,13 +99,13 @@ public class AddProcessController {
         }
     }
 
-    public void setBurstArray(int [] burst) {
+    void setBurstArray(int[] burst) {
         this.burstTimes = burst;
     }
 
-    public void setPriorityArray(int[] priorities) { this.priorities = priorities; }
+    void setPriorityArray(int[] priorities) { this.priorities = priorities; }
 
-    public void switchVisibility(int index) {
+    private void switchVisibility(int index) {
         TextField[] toSwitch = {burstTimeFields[index], priorityFields[index]};
 
         //I do if-else's with brackets weird, I know, feel free to change if you wish
@@ -118,7 +118,7 @@ public class AddProcessController {
         }
     }
 
-    public void closeWindow() {
+    private void closeWindow() {
         Stage stage = (Stage) confirmBtn.getScene().getWindow();
         stage.close();
     }

@@ -28,7 +28,7 @@ public class SRTSim extends Sim {                        //Shortest Remaining Ti
         calculateTotals();
     }
 
-    public void fillpArray() {                          //Fills pArray with Random Data
+    private void fillpArray() {                          //Fills pArray with Random Data
         Random r = new Random();
         for(int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new SRTProcess(i, r.nextInt(10 ) + 1, r.nextInt(10) + 1);
@@ -37,7 +37,7 @@ public class SRTSim extends Sim {                        //Shortest Remaining Ti
         }
     }
 
-    public void fillFixedpArray(int[] burstTimes) {     //Fills pArray with Fixed Data, Assume arrivalTime = pId
+    private void fillFixedpArray(int[] burstTimes) {     //Fills pArray with Fixed Data, Assume arrivalTime = pId
         for (int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new SRTProcess(i, burstTimes[i], i);
             pArray[i].setArrivalTime(i);
@@ -46,7 +46,7 @@ public class SRTSim extends Sim {                        //Shortest Remaining Ti
     }
 
 
-    public void calculateWait() {                                   //This calculates the waits round by round
+    private void calculateWait() {                                   //This calculates the waits round by round
         ArrayList<SRTProcess> subList = new ArrayList<SRTProcess>();         //Use arraylist as temp list because we don't know size
         for (int i = 0; i < totalBurst; i++) {                      //Repeat For total amount of cycles
             for (SRTProcess srtP : pArray) {                        //For all Processes in pArray
@@ -74,14 +74,14 @@ public class SRTSim extends Sim {                        //Shortest Remaining Ti
         }
     }
 
-    public void setTATime() {                   //Sets Turn Around Time
+    private void setTATime() {                   //Sets Turn Around Time
         for (SRTProcess sp : pArray) {
             sp.setWaitTime(sp.getWaitTime() - sp.getArrivalTime());             //Corrects arrival time into wait
             sp.setTurnAroundTime(sp.getWaitTime() + sp.getBurstTime());
         }
     }
 
-    public void calculateTotals() {             //Calculates average wait and turn around time
+    private void calculateTotals() {             //Calculates average wait and turn around time
         for (SRTProcess sp : pArray) {
             totalWait += sp.getWaitTime();
             totalTATime += sp.getTurnAroundTime();

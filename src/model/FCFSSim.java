@@ -29,7 +29,7 @@ public class FCFSSim extends Sim {      //First Come First Serve Simulation
 
     }
 
-    public void fillpArray() {          //This fills pArray with random values
+    private void fillpArray() {          //This fills pArray with random values
         Random r = new Random();
         for (int i =0; i < numOfProcesses; i++) {
             pArray[i] = new FCFSProcess(i, r.nextInt(10) + 1);
@@ -41,7 +41,7 @@ public class FCFSSim extends Sim {      //First Come First Serve Simulation
         }
     }
 
-    public void fillFixedpArray() {     //This fills pArray with the fixed values given
+    private void fillFixedpArray() {     //This fills pArray with the fixed values given
         for (int i = 0; i < numOfProcesses; i++) {
             pArray[i] = new FCFSProcess(i, fixedBurstValues[i]);        //PiD, BurstValue
             pArray[i].setWaitTime(counter);
