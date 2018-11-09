@@ -29,6 +29,7 @@ public class MainViewController {
     @FXML    private ListView taView;
     @FXML    private TextArea outputArea;
 
+    //Variables
     private TextInputDialog input = new TextInputDialog();
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private int[] burstTimes, priorities;
@@ -73,6 +74,7 @@ public class MainViewController {
         priorities = new int[10];
         populateComboBoxes();
         setOutputArea("Welcome to CPU Scheduling Project");
+        startButton.setStyle("-fx-background-color: #2dfff8");
     }
 
     @FXML
@@ -100,6 +102,7 @@ public class MainViewController {
         algorithmBox.getSelectionModel().select(0);
     }
 
+    //Methods
     public void launchAddProcess() {    //Launches Add Process Window in a New Window for Fixed Values
         try {
             Stage secondaryStage = new Stage();                                                              //Stage for new window
